@@ -26,7 +26,9 @@ wx.GetSessionList()
 msg=[]
 with open('input_msg.txt', 'r', encoding='utf-8') as infile:
   msg = infile.readlines()
-  # print(msg[0])
+multi_str = ""
+for m in msg:
+  multi_str += m
            
 df = pd.read_csv('names.csv',header=0, encoding="gbk")
 for i,row in df.iterrows():
@@ -35,9 +37,11 @@ for i,row in df.iterrows():
     who = row[0]
     ret = wx.ChatWith(who)  # 打开`文件传输助手`聊天窗口
     if ret:
-      print('向' + who +'发送：'+ row[1] + '，' + msg[0])
-      if input('回车键确认，任意键取消') == '':
-        wx.SendMsg(str(row[1]) + '，' + msg[0])
+      print('向' + who +'发送：'+ row[1] + '，' + multi_str)
+      if input('回车键确认，任意键+回车取消') == '':
+        WxUtils.SetClipboard(str(row[1]) + '，' + multi_str)
+        wx.SendClipboard()
+        # wx.SendMsg(str(row[1]) + '，' + msg[0])
         print('发送成功')
       else:
         print('取消发送')
@@ -76,5 +80,5 @@ for i,row in df.iterrows():
 # classname = 'WeChatMainWndForPC'
 # wx.ChatWith(who)  # 打开`文件传输助手`聊天窗口
 # wx.SendScreenshot(name, classname)  # 发送微信窗口的截图给文件传输助手
-if input('回车键退出') == '':
+if input('发送结束，回车键退出') == '':
   pass
